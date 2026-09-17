@@ -227,7 +227,7 @@
 
             // 3. Yolcu
             let M = val('M'); let F = val('F'); let C = val('C'); let I = val('I');
-            let pax_A = val('pax_A'); let pax_B = val('pax_B'); let pax_C = val('pax_C');
+            let pax_A = val('pax_A'); let pax_B = val('pax_B'); let pax_C = val('pax_C'); let pax_D = val('pax_D');
             let W_Male = val('W_Male'); let W_Female = val('W_Female'); 
             let W_Child = val('W_Child'); let W_Infant = val('W_Infant');
             
@@ -266,7 +266,7 @@
             print("\n==================================================");
             print("       PRE-TRIM (ON DENGELEME) STRATEJISI       ");
             print("==================================================");
-            let Diff_Pax = 52 - DOI + (0.8 * pax_A) - (1.2 * pax_C) - (0.2 * pax_B);
+            let Diff_Pax = 60 - DOI + (0.8 * pax_A) - (0.2 * pax_C) + (0.2 * pax_B) - (1.2 * pax_D);
             
             if (Diff_Pax > 12) {
                 print(`<span class="yellow-text">-> UYARI: Ucak KUYRUK AGIR (Tail Heavy) olma egiliminde!</span>`);
