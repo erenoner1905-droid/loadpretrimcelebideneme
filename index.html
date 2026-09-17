@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harekat Operasyon Sistemi</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #2980b9;
+            --bg: #ecf0f1;
+            --text: #333;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .panel h2 {
+            font-size: 1.1rem;
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 120px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        button {
+            grid-column: 1 / -1;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #1a5276;
+        }
+        #output-terminal {
+            grid-column: 1 / -1;
+            background-color: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 200px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            display: none;
+        }
+        .red-text { color: #ff5555; font-weight: bold; }
+        .yellow-text { color: #f1fa8c; }
+        .cyan-text { color: #8be9fd; }
+    </style>
+</head>
+<body>
+
+    <h1>HAREKAT OPERASYON SİSTEMİ</h1>
+
+    <div class="container">
+        <!-- 1. Uçak Limitleri -->
+        <div class="panel">
+            <h2>1. UÇAK LİMİTLERİ VE VERİLER</h2>
+            <div class="form-group"><label>Max Zero Fuel Weight (MZFW) [kg]</label><input type="number" id="MZFW" value="62800"></div>
+            <div class="form-group"><label>Max Take-Off Weight (MTOW) [kg]</label><input type="number" id="MTOW" value="73500"></div>
+            <div class="form-group"><label>Max Landing Weight (MLAW) [kg]</label><input type="number" id="MLAW" value="66000"></div>
+            <div class="form-group"><label>Dry Operating Weight (DOW) [kg]</label><input type="number" id="DOW" value="42500"></div>
+            <div class="form-group"><label>Dry Operating Index (DOI)</label><input type="number" step="0.1" id="DOI" value="45.0"></div>
+        </div>
+
+        <!-- 2. Yakıt -->
+        <div class="panel">
+            <h2>2. YAKIT BİLGİSİ</h2>
+            <div class="form-group"><label>Kalkış Yakıtı (Takeoff Fuel) [kg]</label><input type="number" id="Takeoff_Fuel" value="8500"></div>
+            <div class="form-group"><label>Sefer Yakıtı (Trip Fuel) [kg]</label><input type="number" id="Trip_Fuel" value="5000"></div>
+        </div>
+
+        <!-- 3. Yolcu Dağılımı -->
+        <div class="panel">
+            <h2>3. YOLCU VE KABİN BİLGİLERİ</h2>
+            <div class="grid-2">
+                <div>
+                    <h3 style="font-size:0.9rem; margin:0 0 10px 0;">Sayılar</h3>
+                    <div class="form-group"><label>Erkek (M)</label><input type="number" id="M" value="60"></div>
+                    <div class="form-group"><label>Kadın (F)</label><input type="number" id="F" value="75"></div>
+                    <div class="form-group"><label>Çocuk (C)</label><input type="number" id="C" value="15"></div>
+                    <div class="form-group"><label>Bebek (I)</label><input type="number" id="I" value="3"></div>
+                </div>
+                <div>
+                    <h3 style="font-size:0.9rem; margin:0 0 10px 0;">Zone Dağılımı</h3>
+                    <div class="form-group"><label>A Zone Sayısı</label><input type="number" id="pax_A" value="50"></div>
+                    <div class="form-group"><label>B Zone Sayısı</label><input type="number" id="pax_B" value="60"></div>
+                    <div class="form-group"><label>C Zone Sayısı</label><input type="number" id="pax_C" value="40"></div>
+                </div>
+            </div>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+            <div class="grid-2">
+                <div>
+                    <h3 style="font-size:0.9rem; margin:0 0 10px 0;">Standart Ağırlıklar</h3>
+                    <div class="form-group"><label>Erkek Kg</label><input type="number" id="W_Male" value="88"></div>
+                    <div class="form-group"><label>Kadın Kg</label><input type="number" id="W_Female" value="70"></div>
+                    <div class="form-group"><label>Çocuk Kg</label><input type="number" id="W_Child" value="35"></div>
+                    <div class="form-group"><label>Bebek Kg</label><input type="number" id="W_Infant" value="0"></div>
+                </div>
+                <div>
+                    <h3 style="font-size:0.9rem; margin:0 0 10px 0;">Trim Parametresi</h3>
+                    <div class="form-group"><label>Ortalama Yolcu Kg</label><input type="number" id="ortyw" value="78"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. EZFW -->
+        <div class="panel">
+            <h2>4. TAHMİNİ VERİLER (EZFW İÇİN)</h2>
+            <div class="form-group"><label>Tahmini Yetişkin Yolcu (Adult)</label><input type="number" id="Pax_Adult" value="135"></div>
+            <div class="form-group"><label>Tahmini Çocuk Yolcu (Child)</label><input type="number" id="Pax_Child" value="15"></div>
+            <div class="form-group"><label>Tahmini Bebek Yolcu (Infant)</label><input type="number" id="Pax_Infant" value="3"></div>
+            <div class="form-group"><label>Beklenen Toplam Bagaj Adedi</label><input type="number" id="Est_Bags" value="140"></div>
+            <div class="form-group"><label>Beklenen Ekstra Kargo (kg)</label><input type="number" id="Est_Cargo" value="1200"></div>
+        </div>
+
+        <!-- 5. Ambar Yükleme -->
+        <div class="panel" style="grid-column: 1 / -1;">
+            <h2>5. AMBAR YÜKLEME (BAGAJ VE KARGO)</h2>
+            <div class="grid-2">
+                <div>
+                    <div class="form-group"><label>Sistemdeki Toplam Bagaj Adedi</label><input type="number" id="Total_Bag_Count" value="142"></div>
+                    <div class="form-group"><label>Sistemdeki Toplam Bagaj Kg</label><input type="number" id="Total_Bag_Weight" value="1846"></div>
+                </div>
+                <div>
+                    <p style="font-size: 0.85rem; color: #7f8c8d; margin: 0;"><em>* Hold 5 adedi otomatik hesaplanır. Bagaj ağırlıkları Hold'lara oransal dağıtılır (Last Active Hold).</em></p>
+                </div>
+            </div>
+            
+            <div class="grid-2" style="margin-top: 15px;">
+                <div>
+                    <h3 style="font-size:0.9rem; margin:0 0 10px 0;">Bagaj Adetleri</h3>
+                    <div class="form-group"><label>Hold 1 Bagaj</label><input type="number" id="H1_Count" value="40"></div>
+                    <div class="form-group"><label>Hold 2 Bagaj</label><input type="number" id="H2_Count" value="40"></div>
+                    <div class="form-group"><label>Hold 3 Bagaj</label><input type="number" id="H3_Count" value="30"></div>
+                    <div class="form-group"><label>Hold 4 Bagaj</label><input type="number" id="H4_Count" value="32"></div>
+                </div>
+                <div>
+                    <h3 style="font-size:0.9rem; margin:0 0 10px 0;">Ekstra Kargo (kg)</h3>
+                    <div class="form-group"><label>Hold 1 Kargo</label><input type="number" id="Cargo_H1" value="0"></div>
+                    <div class="form-group"><label>Hold 2 Kargo</label><input type="number" id="Cargo_H2" value="600"></div>
+                    <div class="form-group"><label>Hold 3 Kargo</label><input type="number" id="Cargo_H3" value="0"></div>
+                    <div class="form-group"><label>Hold 4 Kargo</label><input type="number" id="Cargo_H4" value="400"></div>
+                    <div class="form-group"><label>Hold 5 Kargo</label><input type="number" id="Cargo_H5" value="0"></div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="calculateSystem()">HESAPLA VE LOADSHEET ÜRET</button>
+
+        <!-- Terminal Çıktısı -->
+        <div id="output-terminal"></div>
+    </div>
+
+    <script>
+        function val(id) {
+            return parseFloat(document.getElementById(id).value) || 0;
+        }
+
+        function calculateSystem() {
+            let out = "";
+            const print = (str) => { out += str + "\n"; };
+
+            // 1. Uçak Limitleri
+            let MZFW = val('MZFW'); let MTOW = val('MTOW'); let MLAW = val('MLAW');
+            let DOW = val('DOW');   let DOI = val('DOI');
+            
+            // 2. Yakıt
+            let Takeoff_Fuel = val('Takeoff_Fuel');
+            let Trip_Fuel = val('Trip_Fuel');
+
+            // 3. Yolcu
+            let M = val('M'); let F = val('F'); let C = val('C'); let I = val('I');
+            let pax_A = val('pax_A'); let pax_B = val('pax_B'); let pax_C = val('pax_C');
+            let W_Male = val('W_Male'); let W_Female = val('W_Female'); 
+            let W_Child = val('W_Child'); let W_Infant = val('W_Infant');
+            
+            // Toplam Yolcu Ağırlığı (MATLAB'taki Wgt -> Total_Pax_Weight düzeltmesi)
+            let Total_Pax_Weight = (M * W_Male) + (F * W_Female) + (C * W_Child) + (I * W_Infant);
+
+            // 4. Tahmini Veriler (EZFW)
+            let Pax_Adult = val('Pax_Adult'); let Pax_Child = val('Pax_Child'); let Pax_Infant = val('Pax_Infant');
+            let Est_Bags = val('Est_Bags'); let Est_Cargo = val('Est_Cargo');
+            
+            let Wgt_Adult = 84; let Wgt_Child = 35; let Wgt_Infant = 0; let Wgt_Bag = 13;
+            let Est_Pax_Weight = (Pax_Adult * Wgt_Adult) + (Pax_Child * Wgt_Child) + (Pax_Infant * Wgt_Infant);
+            let Est_Total_Cargo = (Est_Bags * Wgt_Bag) + Est_Cargo;
+            let Estimated_Payload = Est_Pax_Weight + Est_Total_Cargo;
+            let EZFW = DOW + Estimated_Payload;
+
+            print("==================================================");
+            print("        ESTIMATED ZERO FUEL WEIGHT (EZFW)         ");
+            print("==================================================");
+            print(`Tahmini Yolcu Ağırlığı      : ${Est_Pax_Weight.toFixed(0).padStart(6)} kg`);
+            print(`Tahmini Bagaj+Kargo Ağırlığı: ${Est_Total_Cargo.toFixed(0).padStart(6)} kg`);
+            print("--------------------------------------------------");
+            print(`Tahmini Payload             : ${Estimated_Payload.toFixed(0).padStart(6)} kg`);
+            print(`Dry Operating Weight (DOW)  : ${DOW.toFixed(0).padStart(6)} kg`);
+            print("--------------------------------------------------");
+            print(`EZFW                        : <span class="cyan-text">${EZFW.toFixed(0).padStart(6)} kg</span>`);
+            print(`Yapisal Limit (MZFW)        : ${MZFW.toFixed(0).padStart(6)} kg`);
+            
+            if (EZFW > MZFW) {
+                print(`<span class="red-text">!!! KRITIK UYARI: TAHMINI AGIRLIK (EZFW) YAPISAL LIMITI ASIYOR !!!</span>`);
+                print("ONLEM: Acilen kargo offload planlamasi yapin.");
+            } else {
+                print("DURUM: EZFW yapisal limitlerin altinda, ucus icin uygundur.");
+            }
+
+            print("\n==================================================");
+            print("       PRE-TRIM (ON DENGELEME) STRATEJISI       ");
+            print("==================================================");
+            let Diff_Pax = 52 - DOI + (0.8 * pax_A) - (1.2 * pax_C) - (0.2 * pax_B);
+            
+            if (Diff_Pax > 12) {
+                print(`<span class="yellow-text">-> UYARI: Ucak KUYRUK AGIR (Tail Heavy) olma egiliminde!</span>`);
+                print("-> STRATEJI: Bagajlari oncelikle HOLD 1 ve HOLD 2'ye yukleyin.");
+            } else if (Diff_Pax < -18) {
+                print(`<span class="yellow-text">-> UYARI: Ucak BURUN AGIR (Nose Heavy) olma egiliminde!</span>`);
+                print("-> STRATEJI: Bagajlari oncelikle HOLD 3 ve HOLD 4'e yukleyin.");
+            } else {
+                print("-> DURUM: Yolcu dagilimi dengeli (Neutral).");
+                print("-> STRATEJI: Bagajlari on ve arka ambarlara esit dagitabilirsiniz.");
+            }
+
+            // 5. Bagaj ve Kargo
+            let Total_Bag_Count = val('Total_Bag_Count');
+            let Total_Bag_Weight = val('Total_Bag_Weight');
+            let Avg_Bag_Weight = Total_Bag_Count > 0 ? Total_Bag_Weight / Total_Bag_Count : 0;
+
+            let hCounts = [val('H1_Count'), val('H2_Count'), val('H3_Count'), val('H4_Count'), 0];
+            hCounts[4] = Total_Bag_Count - (hCounts[0] + hCounts[1] + hCounts[2] + hCounts[3]);
+
+            if (hCounts[4] < 0) {
+                alert("HATA: Girilen parça sayısı (Hold 1-4 toplamı), toplam bagaj sayısını aştı!");
+                return;
+            }
+
+            // Last Active Hold Logic
+            let hWeights = [0, 0, 0, 0, 0];
+            let last_active = -1;
+            for(let i=4; i>=0; i--) { if(hCounts[i] > 0) { last_active = i; break; } }
+
+            let weight_sum = 0;
+            for(let i=0; i<5; i++) {
+                if(i !== last_active && hCounts[i] > 0) {
+                    hWeights[i] = Math.round(hCounts[i] * Avg_Bag_Weight);
+                    weight_sum += hWeights[i];
+                }
+            }
+            if(last_active !== -1) {
+                hWeights[last_active] = Total_Bag_Weight - weight_sum;
+            }
+
+            let cCargo = [val('Cargo_H1'), val('Cargo_H2'), val('Cargo_H3'), val('Cargo_H4'), val('Cargo_H5')];
+            let totalHold = [0,0,0,0,0];
+            let Total_Cargo_Weight = 0;
+
+            for(let i=0; i<5; i++){
+                totalHold[i] = hWeights[i] + cCargo[i];
+                Total_Cargo_Weight += totalHold[i];
+            }
+
+            let Total_Payload = Total_Pax_Weight + Total_Cargo_Weight;
+
+            // Loadsheet Math
+            let ZFW = DOW + Total_Payload;          
+            let TOW = ZFW + Takeoff_Fuel;           
+            let LAW = TOW - Trip_Fuel; 
+
+            // Trim Math
+            let ortyw = val('ortyw');
+            let IU_ZoneA = -1.2, IU_ZoneB = 0.5, IU_ZoneC = 1.8;
+            let IU_H1 = -2.5, IU_H2 = -1.0, IU_H3 = 1.2, IU_H4 = 2.8, IU_H5 = 3.5;
+
+            let ZFW_Index = DOI 
+                + ((ortyw * pax_A) / 100 * IU_ZoneA) 
+                + ((ortyw * pax_B) / 100 * IU_ZoneB) 
+                + ((ortyw * pax_C) / 100 * IU_ZoneC)
+                + (totalHold[0] / 100 * IU_H1) 
+                + (totalHold[1] / 100 * IU_H2) 
+                + (totalHold[2] / 100 * IU_H3) 
+                + (totalHold[3] / 100 * IU_H4) 
+                + (totalHold[4] / 100 * IU_H5);
+
+            let TOW_Index = ZFW_Index + (Takeoff_Fuel / 1000 * 0.2);
+
+            // Final Print
+            print("\n==================================================");
+            print("             FINAL LOADSHEET & LIR                ");
+            print("==================================================");
+            print(`PAX (M/F/C/I)      : ${M} / ${F} / ${C} / ${I} (Total: ${M+F+C+I})`);
+            print(`PAX ZONES (A/B/C)  : ${pax_A} / ${pax_B} / ${pax_C}`);
+            print(`PAX WEIGHT         : ${Total_Pax_Weight} kg`);
+            print(`CARGO/BAG WEIGHT   : ${Total_Cargo_Weight} kg`);
+            print("--------------------------------------------------");
+            for(let i=0; i<5; i++){
+                print(`HOLD ${i+1} (Bag+Cgo)   : ${String(hCounts[i]).padStart(3)} pcs -> ${String(totalHold[i]).padStart(5)} kg (Bag: ${hWeights[i]} kg, Cgo: ${cCargo[i]} kg)`);
+            }
+            print("--------------------------------------------------");
+            print(`DOW                : ${String(DOW).padStart(8)} kg`);
+            print(`PAYLOAD            : ${String(Total_Payload).padStart(8)} kg`);
+            
+            let zfw_str = `ZERO FUEL WGT (ZFW): ${String(ZFW).padStart(8)} kg (MAX: ${MZFW})`;
+            print(ZFW > MZFW ? `<span class="red-text">${zfw_str} [LIMIT ASILDI]</span>` : zfw_str);
+            
+            print(`TAKEOFF FUEL       : ${String(Takeoff_Fuel).padStart(8)} kg`);
+            
+            let tow_str = `TAKEOFF WGT (TOW)  : ${String(TOW).padStart(8)} kg (MAX: ${MTOW})`;
+            print(TOW > MTOW ? `<span class="red-text">${tow_str} [LIMIT ASILDI]</span>` : tow_str);
+            
+            let law_str = `LANDING WGT (LAW)  : ${String(LAW).padStart(8)} kg (MAX: ${MLAW})`;
+            print(LAW > MLAW ? `<span class="red-text">${law_str} [LIMIT ASILDI]</span>` : law_str);
+            
+            print("--------------------------------------------------");
+            print(`ZFW INDEX          : <span class="cyan-text">${ZFW_Index.toFixed(2)}</span>`);
+            print(`TOW INDEX          : <span class="cyan-text">${TOW_Index.toFixed(2)}</span>`);
+            print("==================================================");
+
+            if (ZFW > MZFW || TOW > MTOW || LAW > MLAW) {
+                print(`<span class="red-text">!!! KRITIK UYARI: YAPISAL LIMITLER ASILDI !!!</span>`);
+            } else {
+                print(`<span style="color: #50fa7b;">DURUM: Tum agirliklar ve limitler NORMAL. Iyi Ucuslar.</span>`);
+            }
+
+            let term = document.getElementById('output-terminal');
+            term.innerHTML = out;
+            term.style.display = 'block';
+            term.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
