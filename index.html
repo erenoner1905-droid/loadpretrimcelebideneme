@@ -329,7 +329,7 @@
             let IU_ZoneA = -1.2, IU_ZoneB = 0.5, IU_ZoneC = 1.8;
             let IU_H1 = -2.5, IU_H2 = -1.0, IU_H3 = 1.2, IU_H4 = 2.8, IU_H5 = 3.5;
 
-            let ZFW_Index = DOI 
+            let ZFW_Index = (DOI 
                 + ((ortyw * pax_A) / 100 * IU_ZoneA) 
                 + ((ortyw * pax_B) / 100 * IU_ZoneB) 
                 + ((ortyw * pax_C) / 100 * IU_ZoneC)
@@ -337,7 +337,7 @@
                 + (totalHold[1] / 100 * IU_H2) 
                 + (totalHold[2] / 100 * IU_H3) 
                 + (totalHold[3] / 100 * IU_H4) 
-                + (totalHold[4] / 100 * IU_H5);
+                + (totalHold[4] / 100 * IU_H5)) / 2;
 
             let TOW_Index = ZFW_Index + (Takeoff_Fuel / 1000 * 0.2);
 
